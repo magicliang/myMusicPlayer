@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>音乐播放器</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    .gradient-bg {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .glass-effect {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .song-card:hover {
+      transform: translateY(-2px);
+      transition: transform 0.2s;
+    }
+
+    .progress-bar {
+      transition: width 0.1s linear;
+    }
+  </style>
+</head>
+<body class="bg-gray-100">
+<div class="min-h-screen">
+  <!-- 头部导航 -->
+  <header class="gradient-bg text-white shadow-lg">
+    <div class="container mx-auto px-4 py-4">
+      <div class="flex items-center justify-between">
+        <h1 class="text-2xl font-bold flex items-center">
+          <i class="fas fa-music mr-2"></i>
+          音乐播放器
+        </h1>
+        <div class="flex items-center space-x-4">
+          <button class="glass-effect px-4 py-2 rounded-lg hover:bg-white/20" id="refreshBtn">
+            <i class="fas fa-sync-alt mr-1"></i>刷新
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- 主要内容区域 -->
+  <div class="container mx-auto px-4 py-6">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- 左侧：歌曲列表 -->
+      <div class="lg:col-span-2">
+        <div class="bg-white rounded-lg shadow-lg p-6">
+          <h2 class="text-xl font-bold mb-4 flex items-center">
+            <i class="fas fa-list mr-2 text-purple-600"></i>
+            歌曲列表
+          </h2>
+          <div class="space-y-3" id="songsList">
+            <!-- 歌曲列表将通过JavaScript动态加载 -->
+          </div>
+        </div>
+      </div>
+
+      <!-- 右侧：播放器控制 -->
+      <div class="space-y-6">
+        <!-- 当前播放信息 -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+          <h3 class="text-lg font-bold mb-4 flex items-center">
+            <i class="fas fa-play-circle mr-2 text-green-600"></i>
+            正在播放
+          </h3>
+          <div class="text-center" id="currentSong">
+            <div class="w-32 h-32 mx-auto mb-4 bg-gray-200 rounded-lg flex items-center justify-center">
+              <i class="fas fa-music text-4xl text-gray-400"></i>
+            </div>
+            <h4 class="font-semibold text-lg" id="currentSongTitle">未选择歌曲</h4>
+            <p class="text-gray-600" id="currentSongArtist">未知艺术家</p>
+          </div>
+
+          <!-- 进度条 -->
+          <div class="mt-4">
+            <div class="flex justify-between text-sm text-gray-600 mb-1">
+              <span id="currentTime">0:00</span>
+              <span id="totalTime">0:00</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2">
+              <div class="bg-purple-600 h-2 rounded-full progress-bar" id="progressBar" style="width: 0%"></div>
+            </div>
+          </div>
+
+          <!-- 播放控制按钮 -->
+          <div class="flex justify-center space-x-4 mt-4">
+            <button class="p-3 bg-gray-200 rounded-full hover:bg-gray-300" id="prevBtn">
+              <i class="fas fa-step-backward"></i>
+            </button>
+            <button class="p-4 bg-purple-600 text-white rounded-full hover:bg-purple-700" id="playPauseBtn">
+              <i class="fas fa-play"></i>
+            </button>
+            <button class="p-3 bg-gray-200 rounded-full hover:bg-gray-300" id="nextBtn">
+              <i class="fas fa-step-forward"></i>
+            </button>
+          </div>
+
+          <!-- 播放模式 -->
+          <div class="flex justify-center space-x-4 mt-4">
+            <button class="p-2 text-gray-600 hover:text-purple-600" id="shuffleBtn">
+              <i class="fas fa-random"></i>
+            </button>
+            <button class="p-2 text-gray-600 hover:text-purple-600" id="repeatBtn">
+              <i class="fas fa-redo"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- 播放列表 -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+          <h3 class="text-lg font-bold mb-4 flex items-center">
+            <i class="fas fa-list-alt mr-2 text-blue-600"></i>
+            播放列表
+          </h3>
+          <div class="space-y-2" id="playlistsList">
+            <!-- 播放列表将通过JavaScript动态加载 -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 音频播放器 -->
+<audio id="audioPlayer" preload="metadata"></audio>
+
+<script src="app.js"></script>
+</body>
+</html>
