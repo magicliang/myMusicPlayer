@@ -10,12 +10,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserLikedSongRepository extends JpaRepository<UserLikedSong, Long> {
-
     List<UserLikedSong> findByUser(User user);
-
     Optional<UserLikedSong> findByUserAndSong(User user, Song song);
-
     boolean existsByUserAndSong(User user, Song song);
-
     void deleteByUserAndSong(User user, Song song);
 }

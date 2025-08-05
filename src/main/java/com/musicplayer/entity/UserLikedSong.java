@@ -14,31 +14,29 @@ import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "playlist_songs")
-public class PlaylistSong {
+@Table(name = "user_liked_songs")
+public class UserLikedSong {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "playlist_id", nullable = false)
-    @JsonIgnoreProperties({"playlistSongs", "owner"})
-    private Playlist playlist;
+    @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnoreProperties({"playlists", "likedSongs", "playerState"})
+    private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "song_id", nullable = false)
     @JsonIgnoreProperties({"album", "artist"})
     private Song song;
 
-    @Column(nullable = false)
-    private Integer position;
-
-    @Column(name = "added_at", updatable = false)
-    private LocalDateTime addedAt;
+    @Column(name = "liked_at", updatable = false)
+    private LocalDateTime likedAt;
 
     @PrePersist
     protected void onCreate() {
-        addedAt = LocalDateTime.now();
+        likedAt = LocalDateTime.now();
     }
 
     // Getters and Setters
@@ -50,12 +48,12 @@ public class PlaylistSong {
         this.id = id;
     }
 
-    public Playlist getPlaylist() {
-        return playlist;
+    public User getUser() {
+        return user;
     }
 
-    public void setPlaylist(Playlist playlist) {
-        this.playlist = playlist;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Song getSong() {
@@ -66,19 +64,11 @@ public class PlaylistSong {
         this.song = song;
     }
 
-    public Integer getPosition() {
-        return position;
+    public LocalDateTime getLikedAt() {
+        return likedAt;
     }
 
-    public void setPosition(Integer position) {
-        this.position = position;
-    }
-
-    public LocalDateTime getAddedAt() {
-        return addedAt;
-    }
-
-    public void setAddedAt(LocalDateTime addedAt) {
-        this.addedAt = addedAt;
+    public void setLikedAt(LocalDateTime likedAt) {
+        this.likedAt = likedAt;
     }
 }

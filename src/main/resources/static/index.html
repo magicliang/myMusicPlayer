@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>音乐播放器 - Music Player</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    .gradient-bg {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .glass-effect {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .song-card:hover {
+      transform: translateY(-2px);
+      transition: all 0.3s ease;
+    }
+
+    .now-playing {
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.7;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+<body class="bg-gray-900 text-white">
+<div class="min-h-screen gradient-bg">
+  <!-- Header -->
+  <header class="glass-effect p-4 shadow-lg">
+    <div class="container mx-auto flex justify-between items-center">
+      <h1 class="text-2xl font-bold flex items-center">
+        <i class="fas fa-music mr-2"></i>
+        音乐播放器
+      </h1>
+      <div class="flex items-center space-x-4">
+        <button class="p-2 rounded-full hover:bg-white/20" id="searchBtn">
+          <i class="fas fa-search"></i>
+        </button>
+        <div class="relative">
+          <input class="hidden bg-white/20 rounded-full px-4 py-2 text-sm" id="searchInput" placeholder="搜索歌曲、艺术家..."
+                 type="text">
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <div class="container mx-auto p-4">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- Left Panel - Songs -->
+      <div class="lg:col-span-2">
+        <div class="glass-effect rounded-lg p-6">
+          <h2 class="text-xl font-semibold mb-4 flex items-center">
+            <i class="fas fa-list mr-2"></i>
+            所有歌曲
+          </h2>
+          <div class="space-y-2" id="songsList">
+            <!-- Songs will be loaded here -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Panel - Player & Playlists -->
+      <div class="space-y-6">
+        <!-- Player -->
+        <div class="glass-effect rounded-lg p-6">
+          <h3 class="text-lg font-semibold mb-4 flex items-center">
+            <i class="fas fa-play-circle mr-2"></i>
+            播放器
+          </h3>
+          <div class="text-center" id="nowPlaying">
+            <div class="w-32 h-32 mx-auto mb-4 bg-gray-700 rounded-lg flex items-center justify-center">
+              <i class="fas fa-music text-4xl text-gray-400"></i>
+            </div>
+            <h4 class="font-semibold" id="currentSongTitle">未播放</h4>
+            <p class="text-sm text-gray-400" id="currentSongArtist">-</p>
+          </div>
+
+          <div class="mt-4">
+            <input class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer" id="progressBar" max="100" min="0" type="range"
+                   value="0">
+            <div class="flex justify-between text-xs text-gray-400 mt-1">
+              <span id="currentTime">0:00</span>
+              <span id="totalTime">0:00</span>
+            </div>
+          </div>
+
+          <div class="flex justify-center space-x-4 mt-4">
+            <button class="p-2 rounded-full hover:bg-white/20" id="prevBtn">
+              <i class="fas fa-step-backward"></i>
+            </button>
+            <button class="p-3 bg-purple-600 rounded-full hover:bg-purple-700" id="playPauseBtn">
+              <i class="fas fa-play"></i>
+            </button>
+            <button class="p-2 rounded-full hover:bg-white/20" id="nextBtn">
+              <i class="fas fa-step-forward"></i>
+            </button>
+          </div>
+
+          <div class="flex justify-center space-x-4 mt-4">
+            <button class="p-2 text-sm hover:bg-white/20 rounded" id="shuffleBtn">
+              <i class="fas fa-random"></i>
+            </button>
+            <button class="p-2 text-sm hover:bg-white/20 rounded" id="repeatBtn">
+              <i class="fas fa-redo"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Playlists -->
+        <div class="glass-effect rounded-lg p-6">
+          <h3 class="text-lg font-semibold mb-4 flex items-center">
+            <i class="fas fa-list-alt mr-2"></i>
+            播放列表
+          </h3>
+          <div class="space-y-2" id="playlistsList">
+            <!-- Playlists will be loaded here -->
+          </div>
+          <button class="w-full mt-4 p-2 bg-purple-600 rounded hover:bg-purple-700" id="createPlaylistBtn">
+            <i class="fas fa-plus mr-2"></i>创建播放列表
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Audio Element -->
+  <audio id="audioPlayer" preload="metadata"></audio>
+</div>
+
+<!-- Create Playlist Modal -->
+<div class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center" id="createPlaylistModal">
+  <div class="glass-effect rounded-lg p-6 w-96">
+    <h3 class="text-lg font-semibold mb-4">创建新播放列表</h3>
+    <input class="w-full p-2 bg-white/20 rounded mb-4" id="playlistName" placeholder="播放列表名称"
+           type="text">
+    <textarea class="w-full p-2 bg-white/20 rounded mb-4 h-20" id="playlistDescription"
+              placeholder="描述（可选）"></textarea>
+    <div class="flex justify-end space-x-2">
+      <button class="px-4 py-2 bg-gray-600 rounded hover:bg-gray-700" id="cancelPlaylistBtn">
+        取消
+      </button>
+      <button class="px-4 py-2 bg-purple-600 rounded hover:bg-purple-700" id="savePlaylistBtn">
+        创建
+      </button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

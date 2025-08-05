@@ -1,7 +1,10 @@
 package com.musicplayer.config;
 
 import com.musicplayer.entity.Album;
-import java.time.LocalDate;
+import com.musicplayer.entity.Artist;
+import com.musicplayer.entity.Playlist;
+import com.musicplayer.entity.User;
+import com.musicplayer.service.MusicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -10,97 +13,76 @@ import org.springframework.stereotype.Component;
 public class DataInitializer implements CommandLineRunner {
 
     @Autowired
-    private ArtistRepository artistRepository;
-
-    @Autowired
-    private AlbumRepository albumRepository;
-
-    @Autowired
-    private SongRepository songRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
+    private MusicService musicService;
+    
     @Override
     public void run(String... args) throws Exception {
-        // 检查是否已有数据
-        if (artistRepository.count() > 0) {
-            return;
-        }
+        initializeData();
+    }
 
-        // 创建艺术家
-        Artist artist1 = new Artist();
-        artist1.setName("周杰伦");
-        artist1.setBio("华语流行乐天王，创作型歌手");
-        artist1.setImageUrl("https://via.placeholder.com/300x300?text=周杰伦");
-        artistRepository.save(artist1);
+    private void initializeData() {
+        // Create sample users
+        User user1 = musicService.createUser("john_doe", "password123", "john@example.com");
+        User user2 = musicService.createUser("jane_smith", "password123", "jane@example.com");
 
-        Artist artist2 = new Artist();
-        artist2.setName("Taylor Swift");
-        artist2.setBio("American singer-songwriter");
-        artist2.setImageUrl("https://via.placeholder.com/300x300?text=Taylor+Swift");
-        artistRepository.save(artist2);
+        // Create sample artists
+        Artist artist1 = musicService.createArtist("Taylor Swift", "American singer-songwriter",
+                "https://via.placeholder.com/300x300?text=Taylor+Swift");
+        Artist artist2 = musicService.createArtist("Ed Sheeran", "English singer-songwriter",
+                "https://via.placeholder.com/300x300?text=Ed+Sheeran");
+        Artist artist3 = musicService.createArtist("Adele", "English singer-songwriter",
+                "https://via.placeholder.com/300x300?text=Adele");
 
-        // 创建专辑
-        Album album1 = new Album();
-        album1.setTitle("范特西");
-        album1.setArtist(artist1);
-        album1.setReleaseDate(LocalDate.of(2001, 9, 14));
-        album1.setCoverUrl("https://via.placeholder.com/500x500?text=范特西");
-        albumRepository.save(album1);
+        // Create sample albums
+        Album album1 = musicService.createAlbum("1989 (Taylor's Version)", artist1.getId(),
+                "https://via.placeholder.com/300x300?text=1989+TV", "Pop");
+        Album album2 = musicService.createAlbum("÷ (Divide)", artist2.getId(),
+                "https://via.placeholder.com/300x300?text=Divide", "Pop");
+        Album album3 = musicService.createAlbum("25", artist3.getId(), "https://via.placeholder.com/300x300?text=25",
+                "Pop");
+        Album album4 = musicService.createAlbum("Midnights", artist1.getId(),
+                "https://via.placeholder.com/300x300?text=Midnights", "Pop");
 
-        Album album2 = new Album();
-        album2.setTitle("1989");
-        album2.setArtist(artist2);
-        album2.setReleaseDate(LocalDate.of(2014, 10, 27));
-        album2.setCoverUrl("https://via.placeholder.com/500x500?text=1989");
-        albumRepository.save(album2);
+        // Create sample songs
+        musicService.createSong("Shake It Off", artist1.getId(), album1.getId(), 219,
+                "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav");
+        musicService.createSong("Blank Space", artist1.getId(), album1.getId(), 231,
+                "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav");
+        musicService.createSong("Shape of You", artist2.getId(), album2.getId(), 233,
+                "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav");
+        musicService.createSong("Castle on the Hill", artist2.getId(), album2.getId(), 261,
+                "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav");
+        musicService.createSong("Hello", artist3.getId(), album3.getId(), 295,
+                "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav");
+        musicService.createSong("When We Were Young", artist3.getId(), album3.getId(), 290,
+                "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav");
+        musicService.createSong("Anti-Hero", artist1.getId(), album4.getId(), 201,
+                "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav");
+        musicService.createSong("Lavender Haze", artist1.getId(), album4.getId(), 202,
+                "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav");
 
-        // 创建歌曲
-        Song song1 = new Song();
-        song1.setTitle("简单爱");
-        song1.setDuration(258);
-        song1.setAudioUrl("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3");
-        song1.setAlbum(album1);
-        song1.setArtist(artist1);
-        song1.setTrackNumber(1);
-        songRepository.save(song1);
+        // Create sample playlists
+        Playlist playlist1 = musicService.createPlaylist(user1.getId(), "My Favorites", "My favorite songs");
+        Playlist playlist2 = musicService.createPlaylist(user1.getId(), "Workout Mix", "High energy songs for workout");
+        Playlist playlist3 = musicService.createPlaylist(user2.getId(), "Chill Vibes",
+                "Relaxing songs for chill moments");
 
-        Song song2 = new Song();
-        song2.setTitle("开不了口");
-        song2.setDuration(284);
-        song2.setAudioUrl("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3");
-        song2.setAlbum(album1);
-        song2.setArtist(artist1);
-        song2.setTrackNumber(2);
-        songRepository.save(song2);
+        // Add songs to playlists
+        musicService.addSongToPlaylist(playlist1.getId(), 1L);
+        musicService.addSongToPlaylist(playlist1.getId(), 3L);
+        musicService.addSongToPlaylist(playlist1.getId(), 5L);
+        musicService.addSongToPlaylist(playlist1.getId(), 7L);
 
-        Song song3 = new Song();
-        song3.setTitle("Shake It Off");
-        song3.setDuration(219);
-        song3.setAudioUrl("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3");
-        song3.setAlbum(album2);
-        song3.setArtist(artist2);
-        song3.setTrackNumber(1);
-        songRepository.save(song3);
+        musicService.addSongToPlaylist(playlist2.getId(), 1L);
+        musicService.addSongToPlaylist(playlist2.getId(), 2L);
+        musicService.addSongToPlaylist(playlist2.getId(), 3L);
+        musicService.addSongToPlaylist(playlist2.getId(), 4L);
 
-        Song song4 = new Song();
-        song4.setTitle("Blank Space");
-        song4.setDuration(231);
-        song4.setAudioUrl("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3");
-        song4.setAlbum(album2);
-        song4.setArtist(artist2);
-        song4.setTrackNumber(2);
-        songRepository.save(song4);
+        musicService.addSongToPlaylist(playlist3.getId(), 5L);
+        musicService.addSongToPlaylist(playlist3.getId(), 6L);
+        musicService.addSongToPlaylist(playlist3.getId(), 7L);
+        musicService.addSongToPlaylist(playlist3.getId(), 8L);
 
-        Song song5 = new Song();
-        song5.setTitle("七里香");
-        song5.setDuration(295);
-        song5.setAudioUrl("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3");
-        song5.setArtist(artist1);
-        song5.setTrackNumber(1);
-        songRepository.save(song5);
-
-        System.out.println("示例数据初始化完成！");
+        System.out.println("Sample data initialized successfully!");
     }
 }
