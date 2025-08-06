@@ -29,7 +29,7 @@ public class ArtistController {
 
     @GetMapping("/{artistId}")
     public ResponseEntity<Artist> getArtist(@PathVariable Long artistId) {
-        Artist artist = musicService.artistRepository.findById(artistId).orElse(null);
+        Artist artist = musicService.getArtistById(artistId);
         if (artist != null) {
             return ResponseEntity.ok(artist);
         }
@@ -48,6 +48,6 @@ public class ArtistController {
 
     @GetMapping("/search")
     public ResponseEntity<List<Artist>> searchArtists(@RequestParam String query) {
-        return ResponseEntity.ok(musicService.artistRepository.findByNameContainingIgnoreCase(query));
+        return ResponseEntity.ok(musicService.searchArtists(query));
     }
 }

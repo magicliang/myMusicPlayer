@@ -10,14 +10,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PlaylistSongRepository extends JpaRepository<PlaylistSong, Long> {
-
     List<PlaylistSong> findByPlaylistOrderByPosition(Playlist playlist);
-
     Optional<PlaylistSong> findByPlaylistAndSong(Playlist playlist, Song song);
-
     boolean existsByPlaylistAndSong(Playlist playlist, Song song);
-
     void deleteByPlaylistAndSong(Playlist playlist, Song song);
-
     List<PlaylistSong> findByPlaylist(Playlist playlist);
 }

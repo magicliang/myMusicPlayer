@@ -21,7 +21,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Song {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -46,9 +45,6 @@ public class Song {
     private String coverImageUrl;
 
     private Integer trackNumber;
-
-    @ManyToMany(mappedBy = "songs")
-    private List<Playlist> playlists;
 
     @ManyToMany(mappedBy = "likedSongs")
     private List<User> likedByUsers;

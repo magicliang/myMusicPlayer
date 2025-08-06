@@ -29,7 +29,7 @@ public class PlaylistController {
 
     @GetMapping("/{playlistId}")
     public ResponseEntity<Playlist> getPlaylist(@PathVariable Long playlistId) {
-        Playlist playlist = musicService.playlistRepository.findById(playlistId).orElse(null);
+        Playlist playlist = musicService.getPlaylistById(playlistId);
         if (playlist != null) {
             return ResponseEntity.ok(playlist);
         }

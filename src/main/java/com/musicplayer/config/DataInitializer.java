@@ -32,7 +32,7 @@ public class DataInitializer implements CommandLineRunner {
                 "https://via.placeholder.com/300x300?text=Ed+Sheeran");
         Artist artist3 = musicService.createArtist("Adele", "English singer-songwriter",
                 "https://via.placeholder.com/300x300?text=Adele");
-
+        
         // Create sample albums
         Album album1 = musicService.createAlbum("1989 (Taylor's Version)", artist1.getId(),
                 "https://via.placeholder.com/300x300?text=1989+TV", "Pop");
@@ -42,7 +42,7 @@ public class DataInitializer implements CommandLineRunner {
                 "Pop");
         Album album4 = musicService.createAlbum("Midnights", artist1.getId(),
                 "https://via.placeholder.com/300x300?text=Midnights", "Pop");
-
+        
         // Create sample songs
         musicService.createSong("Shake It Off", artist1.getId(), album1.getId(), 219,
                 "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav");
@@ -60,13 +60,13 @@ public class DataInitializer implements CommandLineRunner {
                 "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav");
         musicService.createSong("Lavender Haze", artist1.getId(), album4.getId(), 202,
                 "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav");
-
+        
         // Create sample playlists
         Playlist playlist1 = musicService.createPlaylist(user1.getId(), "My Favorites", "My favorite songs");
         Playlist playlist2 = musicService.createPlaylist(user1.getId(), "Workout Mix", "High energy songs for workout");
         Playlist playlist3 = musicService.createPlaylist(user2.getId(), "Chill Vibes",
                 "Relaxing songs for chill moments");
-
+        
         // Add songs to playlists
         musicService.addSongToPlaylist(playlist1.getId(), 1L);
         musicService.addSongToPlaylist(playlist1.getId(), 3L);

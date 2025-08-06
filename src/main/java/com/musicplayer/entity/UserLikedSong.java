@@ -16,7 +16,6 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "user_liked_songs")
 public class UserLikedSong {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

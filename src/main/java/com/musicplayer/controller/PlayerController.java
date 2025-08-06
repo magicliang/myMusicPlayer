@@ -111,7 +111,6 @@ public class PlayerController {
     }
 
     public static class PlayerStateUpdateRequest {
-
         private Long songId;
         private Integer timestamp;
         private PlayerState.PlayerStatus status;
@@ -152,7 +151,6 @@ public class PlayerController {
     }
 
     public static class PlayerEvent {
-
         private Long userId;
         private String action;
         private Long songId;

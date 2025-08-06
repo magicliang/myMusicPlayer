@@ -4,7 +4,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 public class PlaylistDTO {
-
     private Long id;
 
     @NotBlank(message = "Name is required")

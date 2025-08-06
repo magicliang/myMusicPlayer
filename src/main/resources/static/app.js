@@ -311,7 +311,7 @@ function setupEventListeners() {
         const name = document.getElementById('playlistName').value;
         const description = document.getElementById(
             'playlistDescription').value;
-
+        
         if (name) {
           try {
             await apiCall('/api/playlists', 'POST', {

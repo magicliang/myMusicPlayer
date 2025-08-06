@@ -29,7 +29,7 @@ public class AlbumController {
 
     @GetMapping("/{albumId}")
     public ResponseEntity<Album> getAlbum(@PathVariable Long albumId) {
-        Album album = musicService.albumRepository.findById(albumId).orElse(null);
+        Album album = musicService.getAlbumById(albumId);
         if (album != null) {
             return ResponseEntity.ok(album);
         }
@@ -49,11 +49,11 @@ public class AlbumController {
 
     @GetMapping("/artist/{artistId}")
     public ResponseEntity<List<Album>> getAlbumsByArtist(@PathVariable Long artistId) {
-        return ResponseEntity.ok(musicService.albumRepository.findByArtistId(artistId));
+        return ResponseEntity.ok(musicService.getAlbumsByArtistId(artistId));
     }
 
     @GetMapping("/search")
     public ResponseEntity<List<Album>> searchAlbums(@RequestParam String query) {
-        return ResponseEntity.ok(musicService.albumRepository.findByTitleContainingIgnoreCase(query));
+        return ResponseEntity.ok(musicService.searchAlbums(query));
     }
 }

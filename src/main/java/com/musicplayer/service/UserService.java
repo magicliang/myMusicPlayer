@@ -29,7 +29,7 @@ public class UserService {
         User user = new User();
         user.setUsername(userDTO.getUsername());
         user.setEmail(userDTO.getEmail());
-        user.setPasswordHash(passwordEncoder.encode(userDTO.getPassword()));
+        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
 
         return userRepository.save(user);
     }
@@ -64,7 +64,7 @@ public class UserService {
         user.setEmail(userDTO.getEmail());
 
         if (userDTO.getPassword() != null && !userDTO.getPassword().isEmpty()) {
-            user.setPasswordHash(passwordEncoder.encode(userDTO.getPassword()));
+            user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         }
 
         return userRepository.save(user);

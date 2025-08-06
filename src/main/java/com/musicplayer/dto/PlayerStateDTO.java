@@ -4,7 +4,6 @@ import com.musicplayer.entity.PlayerState;
 import java.util.List;
 
 public class PlayerStateDTO {
-
     private Long currentSongId;
     private Integer playbackPosition;
     private Boolean isPlaying;

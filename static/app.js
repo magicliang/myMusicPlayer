@@ -40,7 +40,7 @@ function setupEventListeners() {
     repeatBtn.addEventListener('click', toggleRepeat);
     refreshBtn.addEventListener('click', refreshData);
 
-    audioPlayer.addEventListener('timeupdate', updateProgress);
+  audioPlayer.addEventListener('timeupdate', updateProgress);
     audioPlayer.addEventListener('ended', handleSongEnd);
     audioPlayer.addEventListener('loadedmetadata', updateDuration);
 }
@@ -105,18 +105,18 @@ function createSongElement(song, index) {
         </div>
     `;
 
-    div.addEventListener('click', (e) => {
+  div.addEventListener('click', (e) => {
         if (!e.target.closest('.play-song-btn')) {
             playSong(index);
         }
     });
 
-    div.querySelector('.play-song-btn').addEventListener('click', (e) => {
+  div.querySelector('.play-song-btn').addEventListener('click', (e) => {
         e.stopPropagation();
         playSong(index);
     });
 
-    return div;
+  return div;
 }
 
 // 渲染播放列表
@@ -139,14 +139,14 @@ function playSong(index) {
         currentSongIndex = index;
         const song = songs[index];
 
-        audioPlayer.src = song.audioUrl;
+      audioPlayer.src = song.audioUrl;
         audioPlayer.play();
 
-        isPlaying = true;
+      isPlaying = true;
         updatePlayPauseButton();
         updateCurrentSongInfo(song);
 
-        // 更新播放状态到服务器
+      // 更新播放状态到服务器
         updatePlayerState(song.id, 0, true);
     }
 }
@@ -164,16 +164,16 @@ function togglePlayPause() {
         return;
     }
 
-    if (isPlaying) {
+  if (isPlaying) {
         audioPlayer.pause();
         isPlaying = false;
-        updatePlayerState(songs[currentSongIndex].id, audioPlayer.currentTime,
-            false);
+    updatePlayerState(songs[currentSongIndex].id, audioPlayer.currentTime,
+        false);
     } else {
         audioPlayer.play();
         isPlaying = true;
-        updatePlayerState(songs[currentSongIndex].id, audioPlayer.currentTime,
-            true);
+    updatePlayerState(songs[currentSongIndex].id, audioPlayer.currentTime,
+        true);
     }
     updatePlayPauseButton();
 }
@@ -186,11 +186,11 @@ function updatePlayPauseButton() {
 
 // 播放上一首
 function playPrevious() {
-    if (songs.length === 0) {
-        return;
-    }
+  if (songs.length === 0) {
+    return;
+  }
 
-    let newIndex;
+  let newIndex;
     if (isShuffle) {
         newIndex = Math.floor(Math.random() * songs.length);
     } else {
@@ -201,11 +201,11 @@ function playPrevious() {
 
 // 播放下一首
 function playNext() {
-    if (songs.length === 0) {
-        return;
-    }
+  if (songs.length === 0) {
+    return;
+  }
 
-    let newIndex;
+  let newIndex;
     if (isShuffle) {
         newIndex = Math.floor(Math.random() * songs.length);
     } else {
@@ -227,10 +227,10 @@ function toggleRepeat() {
     const currentIndex = modes.indexOf(repeatMode);
     repeatMode = modes[(currentIndex + 1) % modes.length];
 
-    const icon = repeatBtn.querySelector('i');
-    repeatBtn.className = `p-2 ${repeatMode !== 'none' ? 'text-purple-600'
-        : 'text-gray-600'} hover:text-purple-600`;
-
+  const icon = repeatBtn.querySelector('i');
+  repeatBtn.className = `p-2 ${repeatMode !== 'none' ? 'text-purple-600'
+      : 'text-gray-600'} hover:text-purple-600`;
+    
     if (repeatMode === 'one') {
         icon.className = 'fas fa-redo-alt';
     } else if (repeatMode === 'all') {
@@ -278,7 +278,7 @@ async function updatePlayerState(songId, position, playing) {
             shuffleMode: isShuffle
         };
 
-        await fetch(`${API_BASE_URL}/player/state/${currentUserId}`, {
+      await fetch(`${API_BASE_URL}/player/state/${currentUserId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',

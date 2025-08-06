@@ -54,15 +54,11 @@ public class SongService {
     }
 
     public List<Song> getSongsByArtist(Long artistId) {
-        Artist artist = artistRepository.findById(artistId)
-                .orElseThrow(() -> new RuntimeException("Artist not found"));
-        return songRepository.findByArtist(artist);
+        return songRepository.findByArtistId(artistId);
     }
 
     public List<Song> getSongsByAlbum(Long albumId) {
-        Album album = albumRepository.findById(albumId)
-                .orElseThrow(() -> new RuntimeException("Album not found"));
-        return songRepository.findByAlbum(album);
+        return songRepository.findByAlbumId(albumId);
     }
 
     public List<Song> searchSongs(String query) {
@@ -70,7 +66,7 @@ public class SongService {
     }
 
     public List<Song> searchSongsByArtist(String artistName) {
-        return songRepository.findByArtistNameContainingIgnoreCase(artistName);
+        return songRepository.searchByTitleOrArtist(artistName);
     }
 
     public Song updateSong(Long id, SongDTO songDTO) {

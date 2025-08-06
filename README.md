@@ -5,7 +5,6 @@
 ## 功能特性
 
 ### 核心功能
-
 - ✅ 用户管理（注册、登录）
 - ✅ 歌曲管理（CRUD操作）
 - ✅ 播放列表管理（创建、编辑、添加/删除歌曲）
@@ -14,7 +13,6 @@
 - ✅ 搜索功能（按歌曲名、艺术家搜索）
 
 ### 技术架构
-
 - **后端**: Spring Boot 3.2.0
 - **数据库**: H2内存数据库（无需外部配置）
 - **实时通信**: WebSocket (STOMP协议)
@@ -26,7 +24,6 @@
 ### 1. 运行项目
 
 #### 方式一：直接运行
-
 ```bash
 # 克隆项目
 git clone [项目地址]
@@ -37,7 +34,6 @@ cd music-player
 ```
 
 #### 方式二：使用Docker
-
 ```bash
 # 构建镜像
 docker build -t music-player .
@@ -47,7 +43,6 @@ docker run -p 8080:8080 music-player
 ```
 
 ### 2. 访问应用
-
 - 主应用: http://localhost:8080
 - H2控制台: http://localhost:8080/h2-console
   - JDBC URL: jdbc:h2:mem:musicdb
@@ -57,7 +52,6 @@ docker run -p 8080:8080 music-player
 ### 3. API端点
 
 #### 用户管理
-
 - `GET /api/users/{userId}` - 获取用户信息
 - `POST /api/users/register` - 注册用户
 
@@ -80,7 +74,6 @@ docker run -p 8080:8080 music-player
 - `POST /api/player/seek/{userId}?timestamp={seconds}` - 跳转到指定时间
 
 ### 4. WebSocket端点
-
 - 连接: `ws://localhost:8080/ws`
 - 订阅: `/user/{userId}/queue/player-state`
 - 发送: `/app/player-event`
@@ -133,25 +126,21 @@ music-player/
 项目启动时会自动创建以下示例数据：
 
 ### 用户
-
 - john_doe (john@example.com)
 - jane_smith (jane@example.com)
 
 ### 艺术家
-
 - Taylor Swift
 - Ed Sheeran
 - Adele
 
 ### 专辑
-
 - 1989 (Taylor's Version)
 - ÷ (Divide)
 - 25
 - Midnights
 
 ### 歌曲
-
 - Shake It Off
 - Blank Space
 - Shape of You
@@ -162,7 +151,6 @@ music-player/
 - Lavender Haze
 
 ### 播放列表
-
 - My Favorites
 - Workout Mix
 - Chill Vibes
@@ -170,20 +158,16 @@ music-player/
 ## 开发说明
 
 ### 数据库
-
 使用H2内存数据库，数据在应用重启后会重置。如需持久化，可修改`application.properties`配置。
 
 ### 前端
-
 前端使用原生JavaScript和Tailwind CSS构建，支持响应式设计。主要功能包括：
-
 - 歌曲列表展示
 - 播放器控制
 - 播放列表管理
 - 实时状态同步
 
 ### 扩展功能
-
 - 用户认证和授权
 - 文件上传（歌曲、封面图片）
 - 推荐系统

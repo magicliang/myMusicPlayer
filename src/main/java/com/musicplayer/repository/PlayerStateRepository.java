@@ -8,8 +8,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PlayerStateRepository extends JpaRepository<PlayerState, Long> {
-
     Optional<PlayerState> findByUser(User user);
-
     Optional<PlayerState> findByUserId(Long userId);
 }

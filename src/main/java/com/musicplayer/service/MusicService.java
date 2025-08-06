@@ -4,6 +4,7 @@ import com.musicplayer.entity.Album;
 import com.musicplayer.entity.Artist;
 import com.musicplayer.entity.PlayerState;
 import com.musicplayer.entity.Playlist;
+import com.musicplayer.entity.PlaylistSong;
 import com.musicplayer.entity.Song;
 import com.musicplayer.entity.User;
 import com.musicplayer.repository.AlbumRepository;
@@ -82,7 +83,7 @@ public class MusicService {
         if (user == null) {
             return null;
         }
-
+        
         Playlist playlist = new Playlist();
         playlist.setName(name);
         playlist.setDescription(description);
@@ -98,7 +99,21 @@ public class MusicService {
             return null;
         }
 
-        playlist.getSongs().add(song);
+        // 检查歌曲是否已在播放列表中
+        boolean songExists = playlist.getPlaylistSongs().stream()
+                .anyMatch(ps -> ps.getSong().getId().equals(songId));
+
+        if (songExists) {
+            return playlist;
+        }
+
+        // 创建新的 PlaylistSong 并设置 position
+        PlaylistSong playlistSong = new PlaylistSong();
+        playlistSong.setPlaylist(playlist);
+        playlistSong.setSong(song);
+        playlistSong.setPosition(playlist.getPlaylistSongs().size());
+
+        playlist.getPlaylistSongs().add(playlistSong);
         return playlistRepository.save(playlist);
     }
 
@@ -108,7 +123,13 @@ public class MusicService {
             return null;
         }
 
-        playlist.getSongs().removeIf(song -> song.getId().equals(songId));
+        playlist.getPlaylistSongs().removeIf(ps -> ps.getSong().getId().equals(songId));
+
+        // 重新排序 position
+        for (int i = 0; i < playlist.getPlaylistSongs().size(); i++) {
+            playlist.getPlaylistSongs().get(i).setPosition(i);
+        }
+
         return playlistRepository.save(playlist);
     }
 
@@ -116,6 +137,18 @@ public class MusicService {
         return playlistRepository.findByOwnerId(userId);
     }
 
+    public Playlist getPlaylistById(Long playlistId) {
+        return playlistRepository.findById(playlistId).orElse(null);
+    }
+
+    public Artist getArtistById(Long artistId) {
+        return artistRepository.findById(artistId).orElse(null);
+    }
+
+    public List<Artist> searchArtists(String query) {
+        return artistRepository.findByNameContainingIgnoreCase(query);
+    }
+    
     // Player state operations
     public PlayerState getPlayerState(Long userId) {
         return playerStateRepository.findByUserId(userId).orElseGet(() -> {
@@ -123,7 +156,7 @@ public class MusicService {
             if (user == null) {
                 return null;
             }
-
+            
             PlayerState state = new PlayerState();
             state.setUser(user);
             state.setStatus(PlayerState.PlayerStatus.STOPPED);
@@ -138,7 +171,7 @@ public class MusicService {
         if (state == null) {
             return null;
         }
-
+        
         if (songId != null) {
             Song song = songRepository.findById(songId).orElse(null);
             state.setCurrentSong(song);
@@ -223,5 +256,17 @@ public class MusicService {
 
     public List<Album> getAllAlbums() {
         return albumRepository.findAll();
+    }
+
+    public List<Album> getAlbumsByArtistId(Long artistId) {
+        return albumRepository.findByArtistId(artistId);
+    }
+
+    public Album getAlbumById(Long albumId) {
+        return albumRepository.findById(albumId).orElse(null);
+    }
+
+    public List<Album> searchAlbums(String query) {
+        return albumRepository.findByTitleContainingIgnoreCase(query);
     }
 }
