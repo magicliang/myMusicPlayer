@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: music-player-deployment
+  namespace: music-player
+  labels:
+    app: music-player
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: music-player
+  template:
+    metadata:
+      labels:
+        app: music-player
+    spec:
+      containers:
+        - name: music-player
+          image: music-player:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "production"
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:postgresql://postgres-service:5432/musicdb"
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: music-player-secret
+                  key: db-username
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: music-player-secret
+                  key: db-password
+          volumeMounts:
+            - name: config-volume
+              mountPath: /app/config
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "1Gi"
+              cpu: "500m"
+      volumes:
+        - name: config-volume
+          configMap:
+            name: music-player-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: music-player-service
+  namespace: music-player
+spec:
+  selector:
+    app: music-player
+  ports:
+    - port: 80
+      targetPort: 8080
+      protocol: TCP
+  type: ClusterIP
