@@ -2,6 +2,8 @@ package com.musicplayer.controller;
 
 import com.musicplayer.entity.User;
 import com.musicplayer.service.MusicService;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -44,6 +46,6 @@ public class UserController {
     public ResponseEntity<List<User>> getAllUsers() {
         // For demo purposes - in real app, this would be paginated
         return ResponseEntity.ok(musicService.getUserById(1L) != null ?
-                List.of(musicService.getUserById(1L)) : List.of());
+                Arrays.asList(musicService.getUserById(1L)) : new ArrayList<>());
     }
 }
