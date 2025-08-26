@@ -10,21 +10,50 @@
 
 ## Local Development
 
-### 1. Run with H2 Database
+### 1. Run with H2 In-Memory Database (Default/Development)
 
 ```bash
+# Default profile uses H2 in-memory database
 mvn spring-boot:run
+
+# Or explicitly use dev profile
+./start-dev.sh
+# or
+mvn spring-boot:run -Dspring-boot.run.profiles=dev
 ```
 
-### 2. Run Tests
+**H2 Console Access:**
+
+- URL: http://localhost:8080/h2-console
+- JDBC URL: `jdbc:h2:mem:musicdb`
+- Username: `sa`
+- Password: (empty)
+
+### 2. Run with PostgreSQL (Production Mode)
 
 ```bash
-# Run all tests
+# Set environment variables (if not using external PostgreSQL)
+export SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/musicdb
+export SPRING_DATASOURCE_USERNAME=musicuser
+export SPRING_DATASOURCE_PASSWORD=musicpass
+
+# Run with production profile
+./start-prod.sh
+# or
+mvn spring-boot:run -Dspring-boot.run.profiles=production
+```
+
+### 3. Run Tests
+
+```bash
+# Run all tests (uses H2 in-memory database)
 mvn test
 
 # Run specific test categories
 mvn test -Dtest="**/*Test"
 mvn test -Dtest="**/*IntegrationTest"
+
+# Tests automatically use H2 in-memory database via test profile
 ```
 
 ### 3. Build Docker Image
